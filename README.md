@@ -9,7 +9,7 @@ A TypeScript Express API server for managing and serving WordPress theme package
 - **Node.js** v18+ 
 - **npm** or **yarn**
 - **Vercel CLI** (for development and deployment)
-- **Cloudflare R2** account with bucket and API credentials
+- **Cloudflare R2** account with bucket and API credentials 
 
 ### Installation
 
