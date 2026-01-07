@@ -7,7 +7,7 @@ export const themes: Record<string, Theme> = {
     packages: [
       {
         ID: "064e94a5-a9ea-4d49-950e-993a19e48bf5",
-        name: "Dummy Package Woozio Mini",
+        name: "Woozio Full Package",
         description: "Woozio is a modern and flexible multipurpose WooCommerce WordPress theme built with Elementor, designed to help you create professional online stores across a wide range of industries.",
         image: "https://market-resized.envatousercontent.com/themeforest.net/files/663541104/woozio-preview.__large_preview.jpg?auto=format&q=94&cf_fit=crop&gravity=top&h=8000&w=590&s=16df3896a0c57d230542d9a9c443cfd987ca6a8732b187c18b9deb0c9ed9d7ea",
         preview_url: 'https://woozio.kinsta.cloud/',
@@ -66,7 +66,7 @@ export const themes: Record<string, Theme> = {
       },
       {
         ID: "064e94a5-a9ea-4d49-950e-993a19e48bf5",
-        name: "Woozio Placeholder",
+        name: "Woozio With Placeholder Images",
         description: "Woozio is a modern and flexible multipurpose WooCommerce WordPress theme built with Elementor, designed to help you create professional online stores across a wide range of industries.",
         image: "https://market-resized.envatousercontent.com/themeforest.net/files/663541104/woozio-preview.__large_preview.jpg?auto=format&q=94&cf_fit=crop&gravity=top&h=8000&w=590&s=16df3896a0c57d230542d9a9c443cfd987ca6a8732b187c18b9deb0c9ed9d7ea",
         preview_url: 'https://woozio.kinsta.cloud/',
