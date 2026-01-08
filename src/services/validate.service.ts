@@ -33,12 +33,24 @@ export const verifyPurchaseCodeValidity = async (theme_id: string, purchase_code
   const response = await fetch(`${api_url}api/v2/verify-purchase-code-validity`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'multipart/form-data',
       'X-API-KEY': api_secret_key,
-      // 'User-Agent': 'PostmanRuntime/7.49.1',
     },
     body: formData,
   });
+
+  // Console log each form field and its value
+  // FormData does not have an entries() in Node.js unless using undici or node-fetch@3+
+  // If running in a Node.js environment with standard FormData, you may need to use formData.forEach
+  // This will log each field appended to the form
+  // if (typeof formData.forEach === 'function') {
+  //   formData.forEach((value, key) => {
+  //     console.log(`Form field: ${key} = ${value}`);
+  //   });
+  // } else if (typeof formData.entries === 'function') {
+  //   for (const [key, value] of formData.entries()) {
+  //     console.log(`Form field: ${key} = ${value}`);
+  //   }
+  // }
 
   // console.log(response);
 
