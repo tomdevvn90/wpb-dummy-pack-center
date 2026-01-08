@@ -34,3 +34,7 @@ export const getPackageFile = async ( req: Request, res: Response, next: NextFun
     next(error);
   }
 }
+
+export const validatePreinstall = async ( req: Request, res: Response, next: NextFunction ) => {
+  return res.status(200).json({ message: 'passed' });
+}

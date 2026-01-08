@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { decodePayload } from '../util/libs';
+import { Package } from '../types/themes';
+import { verifyPurchaseCodeValidity } from '../services/validate.service';
 
 /*
 payload: 
@@ -18,96 +20,45 @@ payload:
   }
 */ 
 
-export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const xxxMeta = req.headers['xxx-meta'] as string | undefined;
+interface Payload {
+  domain: string;
+  ip: string;
+  admin_email: string;
+  license_key: string;
+  wordpress_version: string;
+  php_version: string;
+  theme_slug: string;
+  theme_version: string;
+}
+
+export const authMiddleware = async (req: Request & { package?: Package }, res: Response, next: NextFunction) => {
+  const xxxMeta = req.headers['xxx-meta'] as string | undefined;
     if (!xxxMeta) {
       return res.status(401).json({
-        success: false,
-        data: 'Missing authentication payload',
+        error: 'Missing authentication payload',
       });
     }
 
-    const payload = decodePayload(xxxMeta);
+    const payload = decodePayload(xxxMeta) as Payload;
+    const license_key = payload?.license_key;
+    const domain = payload?.domain;
+
     if (!payload) {
       return res.status(401).json({
         success: false,
         data: 'Invalid authentication payload',
       });
     }
-
-    const p = payload as any;
-    const license_key = typeof p?.license_key === 'string' ? p.license_key.trim() : '';
-    const domain = typeof p?.domain === 'string'
-      ? p.domain.replace(/^https?:\/\//, '').replace(/\/+$/, '').trim()
-      : '';
-    const api_url = typeof p?.api_url === 'string' ? p.api_url.trim() : '';
-    const api_secret_key = typeof p?.api_secret_key === 'string' ? p.api_secret_key.trim() : '';
-    const item_id = typeof p?.item_id === 'string' ? p.item_id.trim() : '';
-
-    if (!license_key) {
-      return res.status(401).json({
-        success: false,
-        data: 'Invalid license key',
-      });
+    
+    const $package = req.package as Package & { theme_id: string };
+    if (!$package) {
+      return res.status(401).json({ error: 'Invalid package' });
     }
 
-    if (!domain) {
-      return res.status(401).json({
-        success: false,
-        data: 'Invalid domain',
-      });
+    const result = await verifyPurchaseCodeValidity($package.theme_id, license_key, domain);
+    if (result.success === false) {
+      return res.status(401).json({ error: 'Invalid purchase code' });
     }
 
-    if (!api_url || !api_secret_key) {
-      return res.status(401).json({
-        success: false,
-        data: 'Missing API credentials in payload',
-      });
-    }
-
-    if (!item_id) {
-      return res.status(401).json({
-        success: false,
-        data: 'Missing item_id in payload',
-      });
-    }
-
-    // Verify purchase code validity
-    const verifyUrl = `${api_url.replace(/\/+$/, '')}/api/v2/verify-purchase-code-validity`;
-    const formData = new FormData();
-    formData.append('item_id', item_id);
-    formData.append('server_name', domain);
-    formData.append('purchase_code', license_key);
-    console.log('formData', formData);
-    const response = await fetch(verifyUrl, {
-      method: 'POST',
-      headers: {
-        'x-api-key': api_secret_key,
-        Accept: 'application/json',
-      },
-      body: formData,
-    });
-    console.log('item_id:', item_id, 'server_name:', domain, 'purchase_code:', license_key);
-    console.log('api_secret_key:', api_secret_key);
-    const data = await response.json().catch(() => null);
-    console.log('verifyUrl:', verifyUrl, 'response status:', response.status, 'data:', data);
-
-    // Ensure data is an object before accessing properties
-    const isValidResponse = data && typeof data === 'object' && !Array.isArray(data);
-
-    if (!response.ok || !isValidResponse || !(data as any)?.success) {
-      const message = isValidResponse ? (data as any)?.message || 'License verification failed' : 'License verification failed';
-      const status = response.status === 404 ? 401 : response.status || 401;
-      return res.status(status).json({ success: false, data: message });
-    }
-
-    next();
-  } catch (error) {
-    console.error('Authentication middleware error', error);
-    return res.status(500).json({
-      success: false,
-      data: 'Internal server error',
-    });
-  }
+    next()
 };

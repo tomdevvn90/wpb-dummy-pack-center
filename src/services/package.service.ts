@@ -1,5 +1,7 @@
 import { S3Client, GetObjectCommand, S3ClientConfig, HeadObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { themes } from '../data/themes';
+import type { Package } from '../types/themes';
 
 const s3_conf: S3ClientConfig = {
   region: 'auto',
@@ -52,4 +54,20 @@ export const getPackageFile = async (r2_file_path: string) : Promise<PackageFile
     lastModified: meta.LastModified,
     etag: meta.ETag,
   };
+}
+
+/**
+ * Get a package object by theme slug and package ID.
+ */
+export function getPackageByThemeSlugAndPackageId(theme_slug: string, package_id: string): Package | undefined {
+  const theme = themes[theme_slug];
+  if (!theme) return undefined;
+  const $p = theme.packages.find(pkg => pkg.ID === package_id);
+  if (!$p) return undefined;
+
+  const theme_id = theme.item_id ? theme.item_id : '';
+  return {
+    ...$p,
+    theme_id: theme_id,
+  } as Package & { theme_id: string };
 }
