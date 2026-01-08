@@ -35,15 +35,13 @@ export const verifyPurchaseCodeValidity = async (theme_id: string, purchase_code
     headers: {
       'Content-Type': 'multipart/form-data',
       'X-API-KEY': api_secret_key,
-      'User-Agent': 'PostmanRuntime/7.49.1',
+      // 'User-Agent': 'PostmanRuntime/7.49.1',
     },
     body: formData,
   });
 
-  console.log(response);
+  // console.log(response);
 
   const data = await response.json();
-
-
   return data;
 }
