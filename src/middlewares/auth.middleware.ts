@@ -42,7 +42,7 @@ export const authMiddleware = async (req: Request & { package?: Package }, res: 
     const payload = decodePayload(xxxMeta) as Payload;
     const license_key = payload?.license_key;
     const domain = payload?.domain;
-
+    console.log(payload)
     if (!payload) {
       return res.status(401).json({
         success: false,
@@ -56,6 +56,9 @@ export const authMiddleware = async (req: Request & { package?: Package }, res: 
     }
 
     const result = await verifyPurchaseCodeValidity($package.theme_id, license_key, domain);
+
+    console.log(result)
+
     if (result.success === false) {
       return res.status(401).json({ error: 'Invalid purchase code' });
     }
