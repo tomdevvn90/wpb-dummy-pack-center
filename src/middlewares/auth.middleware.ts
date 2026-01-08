@@ -60,11 +60,11 @@ export const authMiddleware = async (req: Request & { package?: Package }, res: 
     console.log(result)
 
     if (result.success === false) {
-      return res.status(401).json({ error: 'Invalid purchase code' });
+      return res.status(401).json({ error: 'Invalid purchase code, <a href="/wp-admin/themes.php?page=verifytheme_settings" class="tw-text-blue-600 tw-underline">Verify now!</a>' });
     }
 
     if (result.valid === false) {
-      return res.status(401).json({ error: 'Invalid purchase code' });
+      return res.status(401).json({ error: 'Invalid purchase code, <a href="/wp-admin/themes.php?page=verifytheme_settings" class="tw-text-blue-600 tw-underline">Verify now!</a>' });
     }
 
     next()
