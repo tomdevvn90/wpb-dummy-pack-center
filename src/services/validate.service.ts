@@ -42,15 +42,15 @@ export const verifyPurchaseCodeValidity = async (theme_id: string, purchase_code
   // FormData does not have an entries() in Node.js unless using undici or node-fetch@3+
   // If running in a Node.js environment with standard FormData, you may need to use formData.forEach
   // This will log each field appended to the form
-  if (typeof formData.forEach === 'function') {
-    formData.forEach((value, key) => {
-      console.log(`Form field: ${key} = ${value}`);
-    });
-  } else if (typeof formData.entries === 'function') {
-    for (const [key, value] of formData.entries()) {
-      console.log(`Form field: ${key} = ${value}`);
-    }
-  }
+  // if (typeof formData.forEach === 'function') {
+  //   formData.forEach((value, key) => {
+  //     console.log(`Form field: ${key} = ${value}`);
+  //   });
+  // } else if (typeof formData.entries === 'function') {
+  //   for (const [key, value] of formData.entries()) {
+  //     console.log(`Form field: ${key} = ${value}`);
+  //   }
+  // }
 
   // console.log(response);
 
