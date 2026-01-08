@@ -60,5 +60,9 @@ export const authMiddleware = async (req: Request & { package?: Package }, res: 
       return res.status(401).json({ error: 'Invalid purchase code' });
     }
 
+    if (result.valid === false) {
+      return res.status(401).json({ error: 'Invalid purchase code' });
+    }
+
     next()
 };
